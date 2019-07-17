@@ -1,6 +1,5 @@
 package com.example.minidouyin;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class VideoActivity extends AppCompatActivity {
 
-    public static void launch(Activity activity, String url) {
+    public static void launch(AppCompatActivity activity, String url) {
         Intent intent = new Intent(activity, VideoActivity.class);
         intent.putExtra("url", url);
         activity.startActivity(intent);

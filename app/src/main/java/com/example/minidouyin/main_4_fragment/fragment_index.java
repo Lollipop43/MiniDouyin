@@ -1,6 +1,5 @@
 package com.example.minidouyin.main_4_fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,7 +99,7 @@ public class fragment_index extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder viewHolder, int i) {
             final Video video = videos.get(i);
-            viewHolder.bind(getActivity(), video);
+            viewHolder.bind((AppCompatActivity) getActivity(), video);
         }
         @Override
         public int getItemCount() {
@@ -112,7 +112,7 @@ public class fragment_index extends Fragment {
                 super(itemView);
                 img = itemView.findViewById(R.id.img);
             }
-            public void bind(final Activity activity, final Video video) {
+            public void bind(final AppCompatActivity activity, final Video video) {
                 Resources resources = getContext().getResources();
                 DisplayMetrics dm = resources.getDisplayMetrics();
                 int width = (dm.widthPixels-16)/2;

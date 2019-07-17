@@ -12,6 +12,7 @@ import com.example.minidouyin.main_4_fragment.fragment_following;
 import com.example.minidouyin.main_4_fragment.fragment_index;
 import com.example.minidouyin.main_4_fragment.fragment_me;
 import com.example.minidouyin.main_4_fragment.fragment_message;
+import com.example.minidouyin.main_4_fragment.fragment_video_depend;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.nav_me:
                     transaction.replace(R.id.main_frame, new fragment_me());
+                    transaction.commit();
+                    return true;
+                case R.id.nav_post:
+                    transaction.replace(R.id.main_frame, new fragment_video_depend());
                     transaction.commit();
                     return true;
             }
