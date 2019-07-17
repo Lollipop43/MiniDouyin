@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MiniDouyin</string>
+    <string name="nav_index">首页</string>
+    <string name="nav_following">关注</string>
+    <string name="nav_post"></string>
+    <string name="nav_message">消息</string>
+    <string name="nav_me">我</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="btn_click">click me</string>
+    <string name="child_fragment_following">这是您关注的人的动态</string>
+    <string name="child_fragment_friends">这是您的好友的动态</string>
+    <string name="title">进来学技术</string>
+</resources>
