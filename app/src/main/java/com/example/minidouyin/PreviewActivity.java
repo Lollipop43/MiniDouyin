@@ -1,5 +1,6 @@
 package com.example.minidouyin;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -32,9 +33,14 @@ import retrofit2.Response;
 public class PreviewActivity extends AppCompatActivity {
 
     VideoView videoView ;
-    File videoFile;
+    Button btnSelectImg;
     String videoFilePath;
     Button btnPostIt;
+    Uri mSelectedImage = null;
+    private static final int PICK_IMAGE = 1;
+    private static final int IMG_FROM_1_FRAME = 1;
+    private static final int IMG_FROM_USER = 2;
+    private int imgFromWhere = IMG_FROM_1_FRAME;//default
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +51,8 @@ public class PreviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_preview);
         btnPostIt = findViewById(R.id.postIt);
         videoView = findViewById(R.id.vv);
+        btnSelectImg = findViewById(R.id.selectImg);
+
         videoFilePath = getIntent().getStringExtra("path");
         videoView.setVideoPath(videoFilePath);
         videoView.start();
@@ -52,7 +60,14 @@ public class PreviewActivity extends AppCompatActivity {
         btnPostIt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                postVideo();
+                postVideo(imgFromWhere);
+            }
+        });
+        btnSelectImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgFromWhere = IMG_FROM_USER;
+                chooseImage();
             }
         });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -64,16 +79,37 @@ public class PreviewActivity extends AppCompatActivity {
         });
 
     }
-    private void postVideo() {
+    public void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"),
+                PICK_IMAGE);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && null != data) {
+            if (requestCode == PICK_IMAGE) {
+                mSelectedImage = data.getData();
+            }
+        }
+    }
+    private void postVideo(int imgSrc) {
 //        MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
         /* cover from first frame of video */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        getVideoThumb(videoFilePath).compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), baos.toByteArray());
-        MultipartBody.Part coverImagePart = MultipartBody.Part.createFormData("cover_image", new File(videoFilePath.trim()).getName()+".jpg", requestFile);
-
+        MultipartBody.Part coverImagePart = null;
+        if (imgSrc == IMG_FROM_1_FRAME){
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            getVideoThumb(videoFilePath).compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), baos.toByteArray());
+            coverImagePart = MultipartBody.Part.createFormData("cover_image", new File(videoFilePath.trim()).getName()+".jpg", requestFile);
+        }else if (imgSrc == IMG_FROM_USER){
+            if (mSelectedImage != null)
+                coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
+        }
         MultipartBody.Part videoPart = getMultipartFromPath("video", videoFilePath);
-        // TODO 9: post video & update buttons
         Log.d("你的图片是", coverImagePart+"");
         Log.d("你的视频是", videoPart+"");
         Call<Feed> mCall = internet.getMiniDouyinService().uploadVideo("1231431", "lollipop", coverImagePart, videoPart);

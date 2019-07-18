@@ -1,5 +1,6 @@
 package com.example.minidouyin.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -105,18 +106,31 @@ public class Utils {
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
+    private static final int REQUEST_VIDEO_CAPTURE = 1;
+
+    private static final int REQUEST_EXTERNAL_CAMERA = 101;
     /**
      * Create a File for saving an image or video
      */
-    public static File getOutputMediaFile(int type) {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraDemo");
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                return null;
+    private static String[] permissions = new String[] {
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+    public static File getOutputMediaFile(Activity activity, int type) {
+        File mediaStorageDir = null;
+        if (Utils.isPermissionsReady(activity, permissions)) {
+             mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), "CameraDemo6");
+            if (!mediaStorageDir.exists()) {
+                if (!mediaStorageDir.mkdirs()) {
+                    return null;
+                }
             }
+        } else {
+            //todo 权限检查
+            reuqestPermissions(activity, permissions, REQUEST_EXTERNAL_CAMERA);
         }
-
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;

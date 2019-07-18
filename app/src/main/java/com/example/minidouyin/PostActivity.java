@@ -152,7 +152,7 @@ public class PostActivity extends AppCompatActivity {
                             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
                             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
                             mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-                            videoFile = getOutputMediaFile(MEDIA_TYPE_VIDEO);
+                            videoFile = getOutputMediaFile(PostActivity.this, MEDIA_TYPE_VIDEO);
                             mMediaRecorder.setOutputFile(videoFile.toString());
                             mMediaRecorder.setOrientationHint(90);
                             mMediaRecorder.setPreviewDisplay(mSurfaceView.getHolder().getSurface());
@@ -356,7 +356,7 @@ public class PostActivity extends AppCompatActivity {
     private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
         @Override
         public void onPictureTaken(byte[] bytes, Camera camera) {
-            File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+            File pictureFile = getOutputMediaFile(PostActivity.this, MEDIA_TYPE_IMAGE);
             if (pictureFile == null) {
                 return;
             }

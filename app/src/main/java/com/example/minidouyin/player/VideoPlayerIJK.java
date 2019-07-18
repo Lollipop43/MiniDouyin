@@ -154,10 +154,30 @@ public class VideoPlayerIJK extends FrameLayout {
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
 
         //开启硬解码
+        // https://github.com/Bilibili/ijkplayer/issues/1944
         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", 1);
+        //  关闭播放器缓冲，这个必须关闭，否则会出现播放一段时间后，一直卡主，控制台打印 FFP_MSG_BUFFERING_START
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
+
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 4000 * 1024);
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 100);
+
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "buffer_size", 4000 * 1024);
+
+//        ijkMediaPlayer.setOption(1, "analyzemaxduration", 100L);
+//        ijkMediaPlayer.setOption(1, "probesize", 10240L);
+//        ijkMediaPlayer.setOption(1, "flush_packets", 1L);
+        ijkMediaPlayer.setOption(4, "packet-buffering", 0L);
+        ijkMediaPlayer.setOption(4, "framedrop", 1L);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC,"skip_loop_filter",48L);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"analyzeduration",1);
+//        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"probesize",1024*10);
+
+        ijkMediaPlayer.setSpeed(1f);
 
         mMediaPlayer = ijkMediaPlayer;
-        ((IjkMediaPlayer) mMediaPlayer).setSpeed(1f);
         if (listener != null) {
             mMediaPlayer.setOnPreparedListener(listener);
             mMediaPlayer.setOnInfoListener(listener);
