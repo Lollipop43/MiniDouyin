@@ -5,12 +5,10 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,26 +16,24 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.minidouyin.PostActivity;
+import com.example.minidouyin.PreviewActivity;
 import com.example.minidouyin.R;
-import com.example.minidouyin.api.internet;
-import com.example.minidouyin.model.Feed;
 import com.example.minidouyin.utils.ResourceUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 
 public class fragment_video_depend extends Fragment {
     private Uri mSelectedVideo;
     private Uri mSelectedImage;
+    private File videoFile;
+    private String videoFilePath;
     private static final int PICK_VIDEO = 2;
 
     @Nullable
@@ -64,6 +60,12 @@ public class fragment_video_depend extends Fragment {
                 startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
             }
         });
+        iv_shoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), PostActivity.class));
+            }
+        });
         return view_fragment;
     }
 
@@ -72,7 +74,12 @@ public class fragment_video_depend extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_VIDEO && resultCode == RESULT_OK && null != data) {
             mSelectedVideo = data.getData();
-            postVideo();
+            videoFile = new File(ResourceUtils.getRealPath(getActivity(), mSelectedVideo));
+            videoFilePath = videoFile.getAbsolutePath();
+            Intent i = new Intent(getActivity(), PreviewActivity.class);
+            i.putExtra("path", videoFilePath);
+            startActivity(i);
+//            postVideo();
         }
 
     }
@@ -89,39 +96,7 @@ public class fragment_video_depend extends Fragment {
         return  media.getFrameAtTime();
 
     }
-    private void postVideo() {
-//        MultipartBody.Part coverImagePart = getMultipartFromUri("cover_image", mSelectedImage);
-        /* cover from first frame of video */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        File tmpFile = new File(ResourceUtils.getRealPath(getActivity(), mSelectedVideo));
-        String path = tmpFile.getAbsolutePath();
-        getVideoThumb(path).compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), baos.toByteArray());
-        MultipartBody.Part coverImagePart = MultipartBody.Part.createFormData("cover_image", tmpFile.getName()+".jpg", requestFile);
 
-        MultipartBody.Part videoPart = getMultipartFromUri("video", mSelectedVideo);
-        // TODO 9: post video & update buttons
-        Log.d("你的图片是", coverImagePart+"");
-        Log.d("你的视频是", videoPart+"");
-        /*
-            困惑：Call<...>必须是非基础类型，尽管用不到返回数据？比如int就不行
-         */
-        Call<Feed> mCall = internet.getMiniDouyinService().uploadVideo("1231431", "lollipop", coverImagePart, videoPart);
-
-        mCall.enqueue(new Callback<Feed>() {
-            @Override
-            public void onResponse(Call<Feed> call, Response<Feed> response) {
-                Toast.makeText(getActivity(), "上传成功", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<Feed> call, Throwable t) {
-                Log.d("上传失败", t.toString());
-                Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
     public void chooseVideo() {
         Intent intent = new Intent();
         intent.setType("video/*");

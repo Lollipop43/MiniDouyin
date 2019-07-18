@@ -1,7 +1,6 @@
 package com.example.minidouyin.main_4_fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -24,8 +23,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.minidouyin.IJKPlayerActivity;
 import com.example.minidouyin.R;
+import com.example.minidouyin.VideoActivity;
 import com.example.minidouyin.api.IMiniDouyinService;
 import com.example.minidouyin.model.Feed;
 import com.example.minidouyin.model.Video;
@@ -129,9 +128,10 @@ public class fragment_index extends Fragment {
 //                        FragmentTransaction transaction = manager.beginTransaction();
 //                        transaction.replace(R.id.main_frame, new fragment_index_video(videos, video));
 //                        transaction.commit();
-                        Intent i = new Intent(getActivity(), IJKPlayerActivity.class);
-                        i.putExtra("videoURL", video.getVideoUrl());
-                        startActivity(i);
+//                        Intent i = new Intent(getActivity(), VideoActivity.class);
+//                        i.putExtra("videoURL", video.getVideoUrl());
+//                        startActivity(i);
+                        VideoActivity.launch(getActivity(), video.getVideoUrl());
 //                        VideoView videoView = getActivity().findViewById(R.id.video_container);
 //                        videoView.setVideoURI(Uri.parse(video.getVideoUrl()));
 //                        videoView.start();
