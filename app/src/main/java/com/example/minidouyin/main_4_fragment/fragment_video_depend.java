@@ -45,7 +45,7 @@ public class fragment_video_depend extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view_fragment = inflater.inflate(R.layout.fragment_video_depend, container, false);
         ImageView iv_shoot = view_fragment.findViewById(R.id.shoot);
-        ImageView iv_local = view_fragment.findViewById(R.id.local);
+        final ImageView iv_local = view_fragment.findViewById(R.id.local);
         int width = 220, height = 220;
         Glide.with(view_fragment)
                 .load(R.drawable.shoot)
@@ -58,7 +58,10 @@ public class fragment_video_depend extends Fragment {
         iv_local.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                chooseVideo();
+                Intent intent = new Intent();
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
             }
         });
         return view_fragment;

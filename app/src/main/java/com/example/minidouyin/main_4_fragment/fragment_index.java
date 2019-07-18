@@ -1,6 +1,7 @@
 package com.example.minidouyin.main_4_fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,8 +24,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.minidouyin.IJKPlayerActivity;
 import com.example.minidouyin.R;
-import com.example.minidouyin.VideoActivity;
 import com.example.minidouyin.api.IMiniDouyinService;
 import com.example.minidouyin.model.Feed;
 import com.example.minidouyin.model.Video;
@@ -47,17 +48,7 @@ public class fragment_index extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view_fragment = inflater.inflate(R.layout.fragment_index, container, false);
         initRecyclerView();
-
         fetchFeed(view_fragment);
-//        Button btn = view_fragment.findViewById(R.id.fetch);
-//        View.OnClickListener listener = new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d("=================", "你点击了");
-//                fetchFeed(view_fragment);
-//            }
-//        };
-//        btn.setOnClickListener(listener);
         return view_fragment;
     }
     private Retrofit retrofit;
@@ -134,7 +125,16 @@ public class fragment_index extends Fragment {
                 img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        VideoActivity.launch(activity, video.getVideoUrl());
+//                        FragmentManager manager = getFragmentManager();
+//                        FragmentTransaction transaction = manager.beginTransaction();
+//                        transaction.replace(R.id.main_frame, new fragment_index_video(videos, video));
+//                        transaction.commit();
+                        Intent i = new Intent(getActivity(), IJKPlayerActivity.class);
+                        i.putExtra("videoURL", video.getVideoUrl());
+                        startActivity(i);
+//                        VideoView videoView = getActivity().findViewById(R.id.video_container);
+//                        videoView.setVideoURI(Uri.parse(video.getVideoUrl()));
+//                        videoView.start();
                     }
                 });
             }
