@@ -24,8 +24,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.minidouyin.IJKPlayerActivity;
 import com.example.minidouyin.R;
+import com.example.minidouyin.VerticalViewPager;
 import com.example.minidouyin.api.IMiniDouyinService;
 import com.example.minidouyin.model.Feed;
 import com.example.minidouyin.model.Video;
@@ -125,13 +125,9 @@ public class fragment_index extends Fragment {
                 img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent i = new Intent(getActivity(), IJKPlayerActivity.class);
+                        Intent i = new Intent(getActivity(), VerticalViewPager.class);
                         i.putExtra("videoURL", video.getVideoUrl());
                         startActivity(i);
-//                        VideoActivity.launch(getActivity(), video.getVideoUrl());
-//                        VideoView videoView = getActivity().findViewById(R.id.video_container);
-//                        videoView.setVideoURI(Uri.parse(video.getVideoUrl()));
-//                        videoView.start();
                     }
                 });
             }
